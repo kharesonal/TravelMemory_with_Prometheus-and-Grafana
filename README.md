@@ -38,7 +38,7 @@ Backend is available at  http://localhost:3001
 
   Open url.js file in frontend/src folder and update the backend url
 
- **Note**: Replace your ip address with instance ip address
+ **Note**: Replace ip address with your instance ip address
 
 ### export const baseUrl = "http://52.78:28:89:3001"
 
