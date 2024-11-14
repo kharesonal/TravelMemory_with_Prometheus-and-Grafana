@@ -56,9 +56,9 @@ sudo apt install grafana
 sudo systemctl start grafana-server
 ```
 
-## Step 2: Setup Prometheus 
+## Step 3: Setup Prometheus 
 
-### Step 1: Create a file named prometheus.yaml with the below content
+### 1: Create a file named prometheus.yaml with the below content
 ```
 global:
   scrape_interval: 15s
@@ -71,7 +71,7 @@ scrape_configs:
 ```
 where <backend_server_ip> is the ip of the backend server
 
-### Step 2: Setup Prometheus docker container
+### 2: Setup Prometheus docker container
 ```
 docker run -d \
   --name prometheus \
@@ -84,22 +84,22 @@ where, a prometheus container is launched on port 9090
 
 This prometheus container will scrap the metrices from the backend server ip at every 15 seconds.
 
-### Step 3: Access Prometheus
+### 3: Access Prometheus
 Visit http://localhost:9090 to confirm Prometheus is up and running.
 
-### Step 4: Install Prometheus Client Library
+### 4: Install Prometheus Client Library
 ```
 npm install prom-client
 
 ```
-### Step 5: Configure Basic Metrics in Your Application
+### 5: Configure Basic Metrics in Your Application
 ```
 const client = require('prom-client');
 // Collect default metrics
 const collectDefaultMetrics = client.collectDefaultMetrics;
 collectDefaultMetrics();
 ```
-### Step 6: Define Custom Metrics
+### 6: Define Custom Metrics
 ```
 // Example: Define a Counter for counting HTTP requests
 const httpRequestCounter = new client.Counter({
@@ -116,7 +116,7 @@ const responseTimeHistogram = new client.Histogram({
 });
 ```
 
-### Step 7: Record Metrics in Application Code:
+### 7: Record Metrics in Application Code:
 Update the counters and histograms based on application events:
 ```
 // Middleware example for Express.js to record metrics
@@ -132,7 +132,7 @@ app.use((req, res, next) => {
   next();
 });
 ```
-### Step 8: Expose the metrics endpoint:
+### 8: Expose the metrics endpoint:
 ```
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', client.register.contentType);
@@ -140,7 +140,7 @@ app.get('/metrics', async (req, res) => {
 });
 ```
 
-### Step 9: Create dashboards in Grafana
+### 9: Create dashboards in Grafana
 
 Create a dashoard and select the source as prometheus.
 Divide the dashboard in multiple panels:
@@ -148,6 +148,12 @@ Divide the dashboard in multiple panels:
 #### b) Total request duration per endpoint
 #### c) HTTP request Latency and Throughput
 ![Dashboard1](https://github.com/user-attachments/assets/68d3727f-cef8-4b85-acca-6f3902bc8644)
+
+Create a dashboard to show system information like total user and system CPU time, process heap size, open FDs and resident memory size
+```
+![Dashboard2](https://github.com/user-attachments/assets/bd5bcc61-3125-47d6-96e2-db15e183dfdb)
+
+```
 
 
 ## Step 4: Install Winston for logging
