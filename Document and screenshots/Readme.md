@@ -157,7 +157,7 @@ sudo docker logs -f <container id>
 
 ## Step 4: Install Loki Using Docker
 
-1. Run the Loki Container:
+Run the Loki Container:
 
 ```
 docker run -d \
@@ -168,10 +168,16 @@ docker run -d \
   -config.file=/etc/loki/local-config.yaml
 ```
 
-2. Add Loki as a data source in Grafana:
+## Step 5: Intall and setup Grafana
+```
+sudo apt install grafana
+sudo systemctl start grafana-server
+```
+### Create dashboard in Grafana
+Go to Configuration > Data Sources > Add data source. 
+Select Loki and set the URL to http://loki:3100.
+Select job as "mern_logs"
 
-  Go to Configuration > Data Sources > Add data source.
-  Select Loki and set the URL to http://loki:3100.
 
 
 
