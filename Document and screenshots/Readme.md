@@ -79,7 +79,102 @@ const logger = createLogger({
 
 module.exports = logger;
 ```
-### 3. 
+### 3. Use Winston in Your Application
+
+Open index.js file and import winston logger:
+
+```
+const expressWinston = require('express-winston');
+const logger = require('./logger');
+
+// Request Logging Middleware
+app.use(expressWinston.logger({
+  winstonInstance: logger,
+  msg: "HTTP {{req.method}} {{req.url}}", // Customize the log message
+  meta: true, // Include request and response metadata (default)
+  expressFormat: true, // Use default Express format
+  colorize: false, // Disable colorized output
+}));
+```
+### 4. Test Winston Logging
+
+Start your backend server:
+```
+node server.js
+```
+Check the logs/combined.log
+
+## Step 3: Install Promtail
+
+Promtail is an agent used to collect logs from various sources, which it then forwards to a Loki server for log aggregation
+
+**1. Create a Promtail Configuration File promtail-config.yaml**
+   
+```
+   server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://15.152.42.254:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: system
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: varlogs
+          __path__: /var/log/*.log
+  - job_name: mern_logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: mern_logs
+          __path__: /logs/*.log
+```
+- Replace <LOKI_SERVER> with the IP or hostname of your Loki server.
+- The __path__ key specifies the path for the log files Promtail will read (this example reads files in /var/log/*.log).
+
+**2. Run Promtail with Docker**
+
+Now, use the docker run command to start a Promtail container with this configuration. 
+
+```
+sudo docker run -d --name=promtail   -v "$(pwd)/promtail-config.yaml:/etc/promtail/config.yaml"   -v "/var/log:/var/log"   -v "/home/ubuntu/TravelMemory/backend/logs:/logs" grafana/promtail:2.7.3 -config.file=/etc/promtail/config.yaml
+```
+**3.Check the logs**
+
+```
+sudo docker logs -f <container id>
+```
+
+![image](https://github.com/user-attachments/assets/6e86be7f-617e-45f4-b274-4e384473b692)
+
+## Step 4: Install Loki Using Docker
+
+1. Run the Loki Container:
+
+```
+docker run -d \
+  --name loki \
+  -p 3100:3100 \
+  -v $(pwd)/loki-config.yaml:/etc/loki/local-config.yaml \
+  grafana/loki:latest \
+  -config.file=/etc/loki/local-config.yaml
+```
+
+2. Add Loki as a data source in Grafana:
+
+  Go to Configuration > Data Sources > Add data source.
+  Select Loki and set the URL to http://loki:3100.
+
+
+
 
 
 
