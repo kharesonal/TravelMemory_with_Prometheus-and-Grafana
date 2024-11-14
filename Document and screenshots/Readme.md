@@ -50,7 +50,91 @@ npm start
 ```
 The frontend is available at http://localhost:3000
 
-## Step 2: Install Winston for logging
+## Step 2: Setup Prometheus 
+
+### Step 1: Create a file named prometheus.yaml with the below content
+```
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['<backend_server_ip>:9090']
+
+```
+where <backend_server_ip> is the ip of the backend server
+
+### Step 2: Setup Prometheus docker container
+```
+docker run -d \
+  --name prometheus \
+  -p 9090:9090 \
+  -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml \
+  prom/prometheus
+
+```
+where, a prometheus container is launched on port 9090
+
+This prometheus container will scrap the metrices from the backend server ip at every 15 seconds.
+
+### Step 3: Access Prometheus
+Visit http://localhost:9090 to confirm Prometheus is up and running.
+
+### Step 4: Install Prometheus Client Library
+```
+npm install prom-client
+
+```
+### Step 5: Configure Basic Metrics in Your Application
+```
+const client = require('prom-client');
+// Collect default metrics
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics();
+```
+### Step 6: Define Custom Metrics
+```
+// Example: Define a Counter for counting HTTP requests
+const httpRequestCounter = new client.Counter({
+  name: 'http_requests_total',
+  help: 'Total number of HTTP requests',
+  labelNames: ['method', 'endpoint', 'status']
+});
+
+// Example: Define a Histogram for response times
+const responseTimeHistogram = new client.Histogram({
+  name: 'http_response_time_seconds',
+  help: 'Histogram of HTTP response times in seconds',
+  labelNames: ['method', 'endpoint']
+});
+```
+
+### Step 7: Record Metrics in Application Code:
+Update the counters and histograms based on application events:
+```
+// Middleware example for Express.js to record metrics
+const express = require('express');
+const app = express();
+
+app.use((req, res, next) => {
+  const end = responseTimeHistogram.startTimer();
+  res.on('finish', () => {
+    httpRequestCounter.inc({ method: req.method, endpoint: req.path, status: res.statusCode });
+    end({ method: req.method, endpoint: req.path });
+  });
+  next();
+});
+```
+### Step 8: Expose the metrics endpoint:
+```
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
+```
+
+## Step 3: Install Winston for logging
 
 To integrate logging into your backend, Winston is a great choice as it’s a versatile and powerful logging library for Node.js. Here’s how to install and set it up in your backend:
 
@@ -174,9 +258,11 @@ sudo apt install grafana
 sudo systemctl start grafana-server
 ```
 ### Create dashboard in Grafana
-Go to Configuration > Data Sources > Add data source. 
-Select Loki and set the URL to http://loki:3100.
-Select job as "mern_logs"
+Go to Configuration > Data Sources > Add data source.\
+Select Loki and set the URL to http://loki:3100. \
+Select job as "mern_logs"\
+![Screenshot 2024-11-12 234453](https://github.com/user-attachments/assets/7d47dc82-55ac-4b3b-a854-efd62eef1609)
+
 
 
 
