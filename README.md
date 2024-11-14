@@ -50,7 +50,7 @@ npm start
 ```
 The frontend is available at http://localhost:3000
 
-## Step 2: Intall and setup Grafana
+## Step 2: Install and setup Grafana
 ```
 sudo apt install grafana
 sudo systemctl start grafana-server
@@ -85,6 +85,7 @@ where, a prometheus container is launched on port 9090
 This prometheus container will scrap the metrices from the backend server ip at every 15 seconds.
 
 ### 3: Access Prometheus
+
 Visit http://localhost:9090 to confirm Prometheus is up and running.
 
 ### 4: Install Prometheus Client Library
@@ -117,6 +118,7 @@ const responseTimeHistogram = new client.Histogram({
 ```
 
 ### 7: Record Metrics in Application Code:
+
 Update the counters and histograms based on application events:
 ```
 // Middleware example for Express.js to record metrics
@@ -147,13 +149,13 @@ Divide the dashboard in multiple panels:
 #### a) API metrices which will show the API route, response status and the number of requests made to the route
 #### b) Total request duration per endpoint
 #### c) HTTP request Latency and Throughput
+
 ![Dashboard1](https://github.com/user-attachments/assets/68d3727f-cef8-4b85-acca-6f3902bc8644)
 
 Create a dashboard to show system information like total user and system CPU time, process heap size, open FDs and resident memory size
-```
+
 ![Dashboard2](https://github.com/user-attachments/assets/bd5bcc61-3125-47d6-96e2-db15e183dfdb)
 
-```
 
 
 ## Step 4: Install Winston for logging
@@ -274,14 +276,12 @@ docker run -d \
   -config.file=/etc/loki/local-config.yaml
 ```
 
-## Step 7: Intall and setup Grafana
-```
-sudo apt install grafana
-sudo systemctl start grafana-server
-```
 ### Create dashboard in Grafana
-Go to Configuration > Data Sources > Add data source.\
-Select Loki and set the URL to http://loki:3100. \
-Select job as "mern_logs"\
+
+Go to Configuration > Data Sources > Add data source.
+Select Loki and set the URL to http://loki:3100. 
+Select job as "mern_logs"
+
+
 ![Screenshot 2024-11-12 234453](https://github.com/user-attachments/assets/7d47dc82-55ac-4b3b-a854-efd62eef1609)
 
