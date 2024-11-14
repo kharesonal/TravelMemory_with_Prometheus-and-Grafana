@@ -18,27 +18,6 @@ This setup provides insights into backend performance, database health, and fron
    Clone the TravelMemory application repository:
 ```
    git clone https://github.com/UnpredictablePrashant/TravelMemory.git
-# MERN Application with Monitoring and Observability
-
-This repository contains a MERN (MongoDB, Express, React, Node.js) application for travel memories, integrated with a robust monitoring and observability setup. The application is instrumented with Prometheus for metrics, Grafana for dashboards and alerting, Loki for log aggregation, Promtail for shipping logs, and Jaeger for distributed tracing. The goal is to monitor the application’s performance, log the events, and trace request flows through the stack.
-
-## Project Overview
-This project deploys a travel memory application with a MERN stack, focused on observability and monitoring to ensure high availability, performance, and scalability. The monitoring stack includes:
-
-- Prometheus for metrics
-- Grafana for dashboards and alerting
-- Loki for log aggregation
-- Jaeger for distributed tracing
-  
-This setup provides insights into backend performance, database health, and frontend interactions.
-
-## Step 1: MERN Application Setup
-### 1. Application Deployment
-
-   Clone the TravelMemory application repository:
-```
-   git clone https://github.com/UnpredictablePrashant/TravelMemory.git
-▬
    cd TravelMemory
 ```
 
@@ -305,3 +284,4 @@ Go to Configuration > Data Sources > Add data source.\
 Select Loki and set the URL to http://loki:3100. \
 Select job as "mern_logs"\
 ![Screenshot 2024-11-12 234453](https://github.com/user-attachments/assets/7d47dc82-55ac-4b3b-a854-efd62eef1609)
+
