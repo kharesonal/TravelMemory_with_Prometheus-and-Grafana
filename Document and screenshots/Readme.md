@@ -50,6 +50,12 @@ npm start
 ```
 The frontend is available at http://localhost:3000
 
+## Step 2: Intall and setup Grafana
+```
+sudo apt install grafana
+sudo systemctl start grafana-server
+```
+
 ## Step 2: Setup Prometheus 
 
 ### Step 1: Create a file named prometheus.yaml with the below content
@@ -134,7 +140,17 @@ app.get('/metrics', async (req, res) => {
 });
 ```
 
-## Step 3: Install Winston for logging
+### Step 9: Create dashboards in Grafana
+
+Create a dashoard and select the source as prometheus.
+Divide the dashboard in multiple panels:
+#### a) API metrices which will show the API route, response status and the number of requests made to the route
+#### b) Total request duration per endpoint
+#### c) HTTP request Latency and Throughput
+![Dashboard1](https://github.com/user-attachments/assets/68d3727f-cef8-4b85-acca-6f3902bc8644)
+
+
+## Step 4: Install Winston for logging
 
 To integrate logging into your backend, Winston is a great choice as it’s a versatile and powerful logging library for Node.js. Here’s how to install and set it up in your backend:
 
@@ -188,7 +204,7 @@ node server.js
 ```
 Check the logs/combined.log
 
-## Step 3: Install Promtail
+## Step 5: Install Promtail
 
 Promtail is an agent used to collect logs from various sources, which it then forwards to a Loki server for log aggregation
 
@@ -239,7 +255,7 @@ sudo docker logs -f <container id>
 
 ![image](https://github.com/user-attachments/assets/6e86be7f-617e-45f4-b274-4e384473b692)
 
-## Step 4: Install Loki Using Docker
+## Step 6: Install Loki Using Docker
 
 Run the Loki Container:
 
@@ -252,7 +268,7 @@ docker run -d \
   -config.file=/etc/loki/local-config.yaml
 ```
 
-## Step 5: Intall and setup Grafana
+## Step 7: Intall and setup Grafana
 ```
 sudo apt install grafana
 sudo systemctl start grafana-server
